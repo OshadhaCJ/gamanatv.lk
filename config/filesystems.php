@@ -47,6 +47,20 @@ return [
             'report' => false,
         ],
 
+        // This project's web root is the project root itself (no /public
+        // folder — see the "Setup to host" commit), so the usual
+        // storage:link symlink can't be created (it would collide with the
+        // real storage/ directory). Uploads that need to be publicly
+        // servable go straight into images/uploads/ instead.
+        'uploads' => [
+            'driver' => 'local',
+            'root' => base_path('images/uploads'),
+            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/images/uploads',
+            'visibility' => 'public',
+            'throw' => false,
+            'report' => false,
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),
