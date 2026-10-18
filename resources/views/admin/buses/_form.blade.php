@@ -28,28 +28,50 @@
   class="space-y-10"
 >
 
+  <!-- Step progress -->
+  <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 sm:p-5">
+    <div class="flex items-center justify-between mb-2">
+      <span class="text-[11px] font-bold text-gray-400 uppercase tracking-wide">Step <span x-text="step"></span> of <span x-text="totalSteps"></span></span>
+      <span class="text-sm font-black text-gray-900" x-text="stepLabels[step - 1]"></span>
+    </div>
+    <div class="h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+      <div class="h-full bg-brand-red rounded-full transition-all duration-300" :style="'width: ' + (step / totalSteps * 100) + '%'"></div>
+    </div>
+    <div class="hidden sm:flex items-center gap-1.5 mt-4 overflow-x-auto">
+      <template x-for="(label, i) in stepLabels" :key="i">
+        <button
+          type="button"
+          @click="step = i + 1"
+          class="shrink-0 px-3 py-1.5 rounded-full text-[11px] font-bold transition-colors duration-200"
+          :class="step === i + 1 ? 'bg-brand-red text-white' : (step > i + 1 ? 'bg-brand-red/10 text-brand-red' : 'bg-gray-100 text-gray-500')"
+          x-text="(i + 1) + '. ' + label"
+        ></button>
+      </template>
+    </div>
+  </div>
+
   <!-- City -->
-  <section class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
+  <section x-show="step === 1" x-cloak class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
     <h2 class="font-black text-lg text-gray-900 mb-1">City</h2>
     <p class="text-gray-500 text-sm mb-6">Province &rarr; District &rarr; City</p>
     <div class="grid sm:grid-cols-3 gap-4">
       <div>
         <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">Province</label>
-        <select x-model="provinceId" @change="onProvinceChange()" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm">
+        <select x-model="provinceId" @change="onProvinceChange()" class="w-full px-5 py-3.5 rounded-xl border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200">
           <option value="">Select province</option>
           <template x-for="p in provinces" :key="p.id"><option :value="p.id" x-text="p.name"></option></template>
         </select>
       </div>
       <div>
         <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">District</label>
-        <select x-model="districtId" @change="onDistrictChange()" :disabled="!provinceId" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm disabled:bg-gray-50">
+        <select x-model="districtId" @change="onDistrictChange()" :disabled="!provinceId" class="w-full px-5 py-3.5 rounded-xl border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200 disabled:bg-gray-50">
           <option value="">Select district</option>
           <template x-for="d in districts" :key="d.id"><option :value="d.id" x-text="d.name"></option></template>
         </select>
       </div>
       <div>
         <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">City</label>
-        <select name="city_id" x-model="cityId" :disabled="!districtId" required class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm disabled:bg-gray-50">
+        <select name="city_id" x-model="cityId" :disabled="!districtId" :required="step === 1" class="w-full px-5 py-3.5 rounded-xl border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200 disabled:bg-gray-50">
           <option value="">Select city</option>
           <template x-for="c in cities" :key="c.id"><option :value="c.id" x-text="c.name"></option></template>
         </select>
@@ -63,41 +85,41 @@
   </section>
 
   <!-- Identification -->
-  <section class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
+  <section x-show="step === 2" x-cloak class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
     <h2 class="font-black text-lg text-gray-900 mb-6">Bus Number &amp; Name</h2>
     <div class="grid sm:grid-cols-2 gap-4">
       <div>
         <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">Bus Number</label>
-        <input type="text" name="number" value="{{ old('number', optional($bus)->number ?? '') }}" required class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm" />
+        <input type="text" name="number" value="{{ old('number', optional($bus)->number ?? '') }}" :required="step === 2" class="w-full px-5 py-3.5 rounded-xl border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200" />
         @error('number') <p class="text-brand-red text-xs font-semibold mt-2">{{ $message }}</p> @enderror
       </div>
       <div>
         <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">Name (optional)</label>
-        <input type="text" name="name" value="{{ old('name', optional($bus)->name ?? '') }}" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm" />
+        <input type="text" name="name" value="{{ old('name', optional($bus)->name ?? '') }}" class="w-full px-5 py-3.5 rounded-xl border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200" />
       </div>
     </div>
   </section>
 
   <!-- Owner / Drivers / Conductor -->
-  <section class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
+  <section x-show="step === 3" x-cloak class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
     <h2 class="font-black text-lg text-gray-900 mb-6">Contact Details</h2>
 
     <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">Owner</label>
-    <select name="owner_id" x-model="ownerId" class="w-full sm:w-80 px-4 py-3 rounded-xl border border-gray-200 text-sm mb-2">
+    <select name="owner_id" x-model="ownerId" class="w-full sm:w-80 px-5 py-3.5 rounded-xl border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200 mb-2">
       <option value="">No owner</option>
       <template x-for="o in owners" :key="o.id"><option :value="o.id" x-text="o.phone ? o.name + ' — ' + o.phone : o.name"></option></template>
     </select>
     <div class="flex items-center gap-2 mb-6 max-w-xl">
-      <input type="text" x-model="newOwnerName" placeholder="New owner name..." class="flex-1 px-4 py-3 rounded-xl border border-gray-200 text-sm" />
-      <input type="text" x-model="newOwnerPhone" placeholder="Phone (optional)" class="flex-1 px-4 py-3 rounded-xl border border-gray-200 text-sm" />
+      <input type="text" x-model="newOwnerName" placeholder="New owner name..." class="flex-1 px-5 py-3.5 rounded-xl border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200" />
+      <input type="text" x-model="newOwnerPhone" placeholder="Phone (optional)" class="flex-1 px-5 py-3.5 rounded-xl border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200" />
       <button type="button" @click="addOwner()" :disabled="!newOwnerName" class="shrink-0 text-xs font-bold text-brand-red border border-brand-red/30 rounded-xl px-4 py-3 disabled:opacity-40">+ Add</button>
     </div>
 
     <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">Drivers</label>
     <template x-for="(driver, i) in drivers" :key="i">
       <div class="flex items-center gap-3 mb-3">
-        <input type="text" :name="'drivers[' + i + '][name]'" x-model="driver.name" placeholder="Driver name" class="flex-1 px-4 py-3 rounded-xl border border-gray-200 text-sm" />
-        <input type="text" :name="'drivers[' + i + '][phone]'" x-model="driver.phone" placeholder="Phone" class="flex-1 px-4 py-3 rounded-xl border border-gray-200 text-sm" />
+        <input type="text" :name="'drivers[' + i + '][name]'" x-model="driver.name" placeholder="Driver name" class="flex-1 px-5 py-3.5 rounded-xl border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200" />
+        <input type="text" :name="'drivers[' + i + '][phone]'" x-model="driver.phone" placeholder="Phone" class="flex-1 px-5 py-3.5 rounded-xl border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200" />
         <button type="button" @click="removeDriver(i)" class="w-10 h-10 shrink-0 rounded-full border border-red-100 text-brand-red">&times;</button>
       </div>
     </template>
@@ -106,8 +128,8 @@
     <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">Conductors</label>
     <template x-for="(conductor, i) in conductors" :key="i">
       <div class="flex items-center gap-3 mb-3">
-        <input type="text" :name="'conductors[' + i + '][name]'" x-model="conductor.name" placeholder="Conductor name" class="flex-1 px-4 py-3 rounded-xl border border-gray-200 text-sm" />
-        <input type="text" :name="'conductors[' + i + '][phone]'" x-model="conductor.phone" placeholder="Phone" class="flex-1 px-4 py-3 rounded-xl border border-gray-200 text-sm" />
+        <input type="text" :name="'conductors[' + i + '][name]'" x-model="conductor.name" placeholder="Conductor name" class="flex-1 px-5 py-3.5 rounded-xl border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200" />
+        <input type="text" :name="'conductors[' + i + '][phone]'" x-model="conductor.phone" placeholder="Phone" class="flex-1 px-5 py-3.5 rounded-xl border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200" />
         <button type="button" @click="removeConductor(i)" class="w-10 h-10 shrink-0 rounded-full border border-red-100 text-brand-red">&times;</button>
       </div>
     </template>
@@ -115,7 +137,7 @@
   </section>
 
   <!-- Schedule -->
-  <section class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
+  <section x-show="step === 4" x-cloak class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
     <h2 class="font-black text-lg text-gray-900 mb-6">Fixed Time or Rotation Time</h2>
     <div class="flex items-center gap-3 mb-5">
       <label class="flex items-center gap-2 text-sm font-semibold"><input type="radio" name="schedule_type" value="fixed" x-model="scheduleType" /> Fixed Time</label>
@@ -123,16 +145,16 @@
     </div>
     <div x-show="scheduleType === 'fixed'">
       <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">Time</label>
-      <input type="time" name="fixed_time" value="{{ old('fixed_time', !empty($bus) && $bus->fixed_time ? \Illuminate\Support\Carbon::parse($bus->fixed_time)->format('H:i') : '') }}" class="w-full sm:w-64 px-4 py-3 rounded-xl border border-gray-200 text-sm" />
+      <input type="time" name="fixed_time" value="{{ old('fixed_time', !empty($bus) && $bus->fixed_time ? \Illuminate\Support\Carbon::parse($bus->fixed_time)->format('H:i') : '') }}" class="w-full sm:w-64 px-5 py-3.5 rounded-xl border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200" />
     </div>
     <div x-show="scheduleType === 'rotation'">
       <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">Description</label>
-      <textarea name="rotation_description" rows="3" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm">{{ old('rotation_description', optional($bus)->rotation_description ?? '') }}</textarea>
+      <textarea name="rotation_description" rows="3" class="w-full px-5 py-3.5 rounded-xl border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200">{{ old('rotation_description', optional($bus)->rotation_description ?? '') }}</textarea>
     </div>
   </section>
 
   <!-- Images -->
-  <section class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
+  <section x-show="step === 5" x-cloak class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
     <h2 class="font-black text-lg text-gray-900 mb-6">Images</h2>
     <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
       @foreach (['front_image'=>'Front Image','side_image'=>'Side Image','tv_front_image'=>'TV Front Image','tv_back_image'=>'TV Back Image (with Device)'] as $field => $label)
@@ -151,16 +173,16 @@
   </section>
 
   <!-- Route Operations -->
-  <section class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
+  <section x-show="step === 6" x-cloak class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
     <h2 class="font-black text-lg text-gray-900 mb-6">Route Operations</h2>
     <div class="grid sm:grid-cols-2 gap-4 mb-6">
       <div>
         <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">Routes per Day</label>
-        <input type="number" min="0" name="routes_per_day" value="{{ old('routes_per_day', optional($bus)->routes_per_day ?? '') }}" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm" />
+        <input type="number" min="0" name="routes_per_day" value="{{ old('routes_per_day', optional($bus)->routes_per_day ?? '') }}" class="w-full px-5 py-3.5 rounded-xl border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200" />
       </div>
       <div>
         <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">Average Time per Route (minutes)</label>
-        <input type="number" min="0" name="route_duration_minutes" value="{{ old('route_duration_minutes', optional($bus)->route_duration_minutes ?? '') }}" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm" />
+        <input type="number" min="0" name="route_duration_minutes" value="{{ old('route_duration_minutes', optional($bus)->route_duration_minutes ?? '') }}" class="w-full px-5 py-3.5 rounded-xl border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200" />
       </div>
     </div>
 
@@ -171,7 +193,7 @@
     </div>
     <div x-show="startingPlaceFixed === '1'">
       <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">Route</label>
-      <select name="route_id" x-model="routeId" class="w-full sm:w-96 px-4 py-3 rounded-xl border border-gray-200 text-sm mb-2">
+      <select name="route_id" x-model="routeId" class="w-full sm:w-96 px-5 py-3.5 rounded-xl border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200 mb-2">
         <option value="">Select route</option>
         <template x-for="r in routeOptions" :key="r.id">
           <option :value="r.id" x-text="[r.start_place, r.route, r.end_place].filter(Boolean).join(' → ')"></option>
@@ -189,16 +211,16 @@
   </section>
 
   <!-- TV Details -->
-  <section class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
+  <section x-show="step === 7" x-cloak class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
     <h2 class="font-black text-lg text-gray-900 mb-6">TV Details</h2>
     <div class="grid sm:grid-cols-2 gap-4 mb-6">
       <div>
         <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">Brand</label>
-        <input type="text" name="tv_brand" value="{{ old('tv_brand', optional($bus)->tv_brand ?? '') }}" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm" />
+        <input type="text" name="tv_brand" value="{{ old('tv_brand', optional($bus)->tv_brand ?? '') }}" class="w-full px-5 py-3.5 rounded-xl border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200" />
       </div>
       <div>
         <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">Size</label>
-        <input type="text" name="tv_size" value="{{ old('tv_size', optional($bus)->tv_size ?? '') }}" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm" />
+        <input type="text" name="tv_size" value="{{ old('tv_size', optional($bus)->tv_size ?? '') }}" class="w-full px-5 py-3.5 rounded-xl border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200" />
       </div>
     </div>
     <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">Input</label>
@@ -209,37 +231,37 @@
   </section>
 
   <!-- Devices -->
-  <section class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
+  <section x-show="step === 8" x-cloak class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
     <h2 class="font-black text-lg text-gray-900 mb-6">Devices</h2>
 
     <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">Processing Unit</label>
-    <select name="processing_unit_id" x-model="processingUnitId" class="w-full sm:w-80 px-4 py-3 rounded-xl border border-gray-200 text-sm mb-2">
+    <select name="processing_unit_id" x-model="processingUnitId" class="w-full sm:w-80 px-5 py-3.5 rounded-xl border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200 mb-2">
       <option value="">No device assigned</option>
       <template x-for="u in processingUnits" :key="u.id"><option :value="u.id" x-text="u.device_id"></option></template>
     </select>
     @error('processing_unit_id') <p class="text-brand-red text-xs font-semibold mb-2">{{ $message }}</p> @enderror
     <div class="flex items-center gap-2 max-w-xl mb-6">
-      <input type="text" x-model="newUnitDeviceId" inputmode="numeric" pattern="[0-9]*" placeholder="New device ID (numbers only)..." class="flex-1 px-4 py-3 rounded-xl border border-gray-200 text-sm" />
-      <input type="text" x-model="newUnitPhone" placeholder="Telephone (optional)" class="flex-1 px-4 py-3 rounded-xl border border-gray-200 text-sm" />
+      <input type="text" x-model="newUnitDeviceId" inputmode="numeric" pattern="[0-9]*" placeholder="New device ID (numbers only)..." class="flex-1 px-5 py-3.5 rounded-xl border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200" />
+      <input type="text" x-model="newUnitPhone" placeholder="Telephone (optional)" class="flex-1 px-5 py-3.5 rounded-xl border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200" />
       <button type="button" @click="addProcessingUnit()" :disabled="!newUnitDeviceId" class="shrink-0 text-xs font-bold text-brand-red border border-brand-red/30 rounded-xl px-4 py-3 disabled:opacity-40">+ Add</button>
     </div>
 
     <label class="block text-xs font-bold text-gray-600 uppercase tracking-wide mb-2">Storage Unit</label>
-    <select name="storage_unit_id" x-model="storageUnitId" class="w-full sm:w-80 px-4 py-3 rounded-xl border border-gray-200 text-sm mb-2">
+    <select name="storage_unit_id" x-model="storageUnitId" class="w-full sm:w-80 px-5 py-3.5 rounded-xl border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200 mb-2">
       <option value="">No device assigned</option>
       <template x-for="u in storageUnits" :key="u.id"><option :value="u.id" x-text="u.pen_id"></option></template>
     </select>
     @error('storage_unit_id') <p class="text-brand-red text-xs font-semibold mb-2">{{ $message }}</p> @enderror
     <div class="flex items-center gap-2 max-w-xl">
-      <input type="text" x-model="newStorageUnitPenId" inputmode="numeric" pattern="[0-9]*" placeholder="New pen ID (numbers only)..." class="flex-1 px-4 py-3 rounded-xl border border-gray-200 text-sm" />
+      <input type="text" x-model="newStorageUnitPenId" inputmode="numeric" pattern="[0-9]*" placeholder="New pen ID (numbers only)..." class="flex-1 px-5 py-3.5 rounded-xl border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200" />
       <button type="button" @click="addStorageUnit()" :disabled="!newStorageUnitPenId" class="shrink-0 text-xs font-bold text-brand-red border border-brand-red/30 rounded-xl px-4 py-3 disabled:opacity-40">+ Add</button>
     </div>
   </section>
 
   <!-- Holidays -->
-  <section class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
+  <section x-show="step === 9" x-cloak class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
     <h2 class="font-black text-lg text-gray-900 mb-6">Holiday Note</h2>
-    <input type="text" name="holiday_note" value="{{ old('holiday_note', optional($bus)->holiday_note ?? '') }}" placeholder="e.g. Poya days, Sundays" class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm" />
+    <input type="text" name="holiday_note" value="{{ old('holiday_note', optional($bus)->holiday_note ?? '') }}" placeholder="e.g. Poya days, Sundays" class="w-full px-5 py-3.5 rounded-xl border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200" />
   </section>
 
 </div>

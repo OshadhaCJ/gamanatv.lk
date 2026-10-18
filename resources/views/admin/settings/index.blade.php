@@ -42,7 +42,7 @@
 
       @foreach ($groups as $group => $settings)
         <section class="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
-          <h2 class="font-black text-lg text-gray-900">{{ $groupLabels[$group]['title'] ?? ucfirst($group) }}</h2>
+          <h2 class="font-black text-lg sm:text-xl text-gray-900">{{ $groupLabels[$group]['title'] ?? ucfirst($group) }}</h2>
           <p class="text-gray-500 text-sm mb-6">{{ $groupLabels[$group]['desc'] ?? '' }}</p>
 
           <div class="space-y-5">
@@ -58,13 +58,13 @@
                       type="number" min="0" max="500" step="1"
                       name="settings[{{ $setting->key }}]"
                       value="{{ $setting->value }}"
-                      class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm"
+                      class="w-full px-5 py-3.5 rounded-xl border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200"
                     />
                     <span class="text-sm font-bold text-gray-400">%</span>
                   </div>
                   <p class="text-[11px] text-gray-400 mt-1.5">A bus is flagged as overrunning once it's been running longer than its route duration + this markup.</p>
                 @elseif ($setting->key === 'otp_preferred_method')
-                  <select name="settings[{{ $setting->key }}]" class="w-full sm:w-96 px-4 py-3 rounded-xl border border-gray-200 text-sm">
+                  <select name="settings[{{ $setting->key }}]" class="w-full sm:w-96 px-5 py-3.5 rounded-xl border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200">
                     <option value="sms" {{ $setting->value === 'sms' ? 'selected' : '' }}>SMS only</option>
                     <option value="whatsapp" {{ $setting->value === 'whatsapp' ? 'selected' : '' }}>WhatsApp only</option>
                     <option value="whatsapp_then_sms" {{ $setting->value === 'whatsapp_then_sms' ? 'selected' : '' }}>WhatsApp, fall back to SMS</option>
@@ -76,7 +76,7 @@
                       name="settings[{{ $setting->key }}]"
                       placeholder="{{ $setting->value ? '••••••••••••' : 'Not set' }}"
                       autocomplete="new-password"
-                      class="w-full px-4 py-3 pr-12 rounded-xl border border-gray-200 text-sm"
+                      class="w-full px-5 py-3.5 pr-14 rounded-xl border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200"
                     />
                     <button
                       type="button"
@@ -92,7 +92,7 @@
                     type="text"
                     name="settings[{{ $setting->key }}]"
                     value="{{ $setting->value }}"
-                    class="w-full max-w-xl px-4 py-3 rounded-xl border border-gray-200 text-sm"
+                    class="w-full max-w-xl px-5 py-3.5 rounded-xl border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200"
                   />
                 @endif
               </div>
@@ -105,7 +105,7 @@
         <button
           type="submit"
           :disabled="submitting"
-          class="inline-flex items-center gap-2 px-8 py-3 rounded-full font-bold text-sm text-white bg-brand-red hover:bg-brand-darkRed active:scale-[0.98] disabled:opacity-70 shadow-md shadow-brand-red/25 transition-all duration-300"
+          class="inline-flex items-center gap-2 px-9 py-3.5 rounded-full font-black text-base text-white bg-brand-red hover:bg-brand-darkRed active:scale-[0.98] hover:scale-[1.02] disabled:opacity-70 shadow-lg shadow-brand-red/30 transition-all duration-300"
         >
           <svg x-show="submitting" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
             <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>

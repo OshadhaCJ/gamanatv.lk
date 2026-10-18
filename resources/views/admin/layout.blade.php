@@ -25,6 +25,7 @@
     .fade-in { animation: fadeIn 0.35s ease-out both; }
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 9999px; }
+    [x-cloak] { display: none !important; }
   </style>
 </head>
 <body class="bg-gray-50 text-gray-900 font-sans antialiased h-screen flex overflow-hidden">
@@ -89,6 +90,19 @@
           </span>
           Settings
         </a>
+        @php $usersActive = request()->routeIs('admin.users.*'); @endphp
+        <a
+          href="{{ route('admin.users.index') }}"
+          class="group relative flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors duration-200 {{ $usersActive ? 'bg-white/10 text-white' : 'text-gray-400 hover:bg-white/5 hover:text-white' }}"
+        >
+          <span class="absolute left-0 top-1/2 -translate-y-1/2 h-5 w-1 rounded-r-full bg-brand-red transition-opacity duration-200 {{ $usersActive ? 'opacity-100' : 'opacity-0' }}"></span>
+          <span class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors duration-200 {{ $usersActive ? 'bg-brand-red text-white' : 'bg-white/5 text-gray-400 group-hover:text-white' }}">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0ZM12 14a7 7 0 0 0-7 7h14a7 7 0 0 0-7-7Z" />
+            </svg>
+          </span>
+          Users
+        </a>
       @endif
     </nav>
 
@@ -139,6 +153,10 @@
           {{ $item['label'] }}
         </a>
       @endforeach
+      @if (in_array(auth()->user()->role, ['developer', 'admin']))
+        <a href="{{ route('admin.settings') }}" class="shrink-0 px-4 py-2 rounded-full text-xs font-bold {{ request()->routeIs('admin.settings') ? 'bg-brand-red text-white' : 'bg-gray-100 text-gray-600' }}">Settings</a>
+        <a href="{{ route('admin.users.index') }}" class="shrink-0 px-4 py-2 rounded-full text-xs font-bold {{ request()->routeIs('admin.users.*') ? 'bg-brand-red text-white' : 'bg-gray-100 text-gray-600' }}">Users</a>
+      @endif
     </nav>
 
     <!-- Desktop top bar -->

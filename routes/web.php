@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\RouteController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\StorageSwapController;
 use App\Http\Controllers\Admin\StorageUnitController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DeviceWebhookController;
 use App\Http\Controllers\GoogleAuthController;
@@ -84,4 +85,6 @@ Route::middleware(['auth', 'role:developer,admin'])
     ->group(function () {
         Route::get('/settings', [SettingController::class, 'index'])->name('settings');
         Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
+
+        Route::resource('users', UserController::class)->only(['index', 'store', 'update', 'destroy']);
     });

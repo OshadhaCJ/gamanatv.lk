@@ -26,19 +26,19 @@
       createStorageUnitUrl: "{{ route('admin.storage-units.store') }}",
       csrfToken: "{{ csrf_token() }}",
     })'
-    class="fade-in bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-8"
+    class="fade-in bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8 mb-8"
   >
-    <h3 class="font-black text-sm text-gray-900 mb-4">Log a Swap</h3>
+    <h3 class="font-black text-base sm:text-lg text-gray-900 mb-5">Log a Swap</h3>
 
     <form method="POST" action="{{ route('admin.storage-swaps.store') }}" class="space-y-4">
       @csrf
 
       <div class="relative max-w-sm">
-        <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5">Search Bus</label>
+        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">Search Bus</label>
         <input
           type="text" x-model="busSearch" @focus="busOpen = true" @click.outside="busOpen = false"
           placeholder="Search by bus number or name..."
-          class="w-full px-4 py-2.5 rounded-full border border-gray-200 text-sm"
+          class="w-full px-5 py-3.5 rounded-full border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200"
           autocomplete="off"
         />
         <div x-show="busOpen && filteredBuses.length" class="absolute z-10 mt-1 w-full bg-white border border-gray-200 rounded-xl shadow-lg max-h-56 overflow-y-auto">
@@ -60,20 +60,20 @@
       </template>
 
       <div>
-        <label class="block text-xs font-bold text-gray-500 uppercase mb-1.5">New Storage Unit (Pen ID)</label>
+        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">New Storage Unit (Pen ID)</label>
         <div class="flex items-center gap-2 max-w-md">
-          <select name="new_storage_unit_id" x-model="newUnitId" class="flex-1 px-4 py-2.5 rounded-full border border-gray-200 text-sm">
+          <select name="new_storage_unit_id" x-model="newUnitId" class="flex-1 px-5 py-3.5 rounded-full border-2 border-gray-200 text-base focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200">
             <option value="">Select pen ID</option>
             <template x-for="u in storageUnits" :key="u.id"><option :value="u.id" x-text="u.pen_id"></option></template>
           </select>
         </div>
         <div class="flex items-center gap-2 max-w-md mt-2">
-          <input type="text" x-model="newPenId" inputmode="numeric" pattern="[0-9]*" placeholder="Or register a new pen ID..." class="flex-1 px-4 py-2 rounded-full border border-gray-200 text-xs" />
-          <button type="button" @click="addStorageUnit()" :disabled="!newPenId" class="shrink-0 text-xs font-bold text-brand-red border border-brand-red/30 rounded-full px-3 py-2 disabled:opacity-40">+ Register</button>
+          <input type="text" x-model="newPenId" inputmode="numeric" pattern="[0-9]*" placeholder="Or register a new pen ID..." class="flex-1 px-4 py-2.5 rounded-full border-2 border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-red/15 focus:border-brand-red" />
+          <button type="button" @click="addStorageUnit()" :disabled="!newPenId" class="shrink-0 text-xs font-bold text-brand-red border-2 border-brand-red/30 rounded-full px-4 py-2.5 disabled:opacity-40">+ Register</button>
         </div>
       </div>
 
-      <button type="submit" :disabled="!selectedBus || !newUnitId" class="inline-flex items-center gap-2 bg-brand-red hover:bg-brand-darkRed active:scale-[0.98] disabled:opacity-40 text-white px-6 py-2.5 rounded-full font-bold text-sm shadow-md shadow-brand-red/25 transition-all duration-300">
+      <button type="submit" :disabled="!selectedBus || !newUnitId" class="inline-flex items-center gap-2 bg-brand-red hover:bg-brand-darkRed active:scale-[0.98] hover:scale-[1.02] disabled:opacity-40 disabled:hover:scale-100 text-white px-8 py-3.5 rounded-full font-black text-base shadow-lg shadow-brand-red/30 transition-all duration-300">
         Mark as Changed
       </button>
     </form>

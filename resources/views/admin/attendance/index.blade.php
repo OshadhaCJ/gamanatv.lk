@@ -12,14 +12,14 @@
       </p>
     </div>
     <form method="GET" class="flex items-center gap-2">
-      <input type="date" name="date" value="{{ $date->toDateString() }}" onchange="this.form.submit()" class="px-4 py-2.5 rounded-full border border-gray-200 text-sm" />
+      <input type="date" name="date" value="{{ $date->toDateString() }}" onchange="this.form.submit()" class="px-5 py-3 rounded-full border-2 border-gray-200 text-sm font-semibold focus:outline-none focus:ring-4 focus:ring-brand-red/15 focus:border-brand-red transition-all duration-200" />
     </form>
   </div>
 
   <div class="fade-in bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
     @foreach ($buses as $bus)
       @php $attendance = $bus->attendances->first(); @endphp
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-6 py-4 {{ !$loop->last ? 'border-b border-gray-100' : '' }}">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-6 py-5 {{ !$loop->last ? 'border-b border-gray-100' : '' }}">
         <div class="min-w-0">
           <p class="font-bold text-gray-900">{{ $bus->number }}{{ $bus->name ? ' — '.$bus->name : '' }}</p>
           <p class="text-xs text-gray-500">{{ $bus->city->name }}</p>
@@ -52,9 +52,9 @@
             @csrf
             <input type="hidden" name="bus_id" value="{{ $bus->id }}" />
             <input type="hidden" name="date" value="{{ $date->toDateString() }}" />
-            <button type="submit" name="status" value="running" class="text-xs font-bold text-green-700 border border-green-200 rounded-full px-3 py-1.5 hover:bg-green-50 transition-colors duration-200">Running</button>
-            <button type="submit" name="status" value="holiday" class="text-xs font-bold text-blue-700 border border-blue-200 rounded-full px-3 py-1.5 hover:bg-blue-50 transition-colors duration-200">Holiday</button>
-            <button type="submit" name="status" value="couldnt_contact" class="text-xs font-bold text-brand-red border border-red-200 rounded-full px-3 py-1.5 hover:bg-red-50 transition-colors duration-200">Couldn't Contact</button>
+            <button type="submit" name="status" value="running" class="text-xs font-bold text-green-700 border-2 border-green-200 rounded-full px-4 py-2 hover:bg-green-50 hover:scale-105 transition-all duration-200">Running</button>
+            <button type="submit" name="status" value="holiday" class="text-xs font-bold text-blue-700 border-2 border-blue-200 rounded-full px-4 py-2 hover:bg-blue-50 hover:scale-105 transition-all duration-200">Holiday</button>
+            <button type="submit" name="status" value="couldnt_contact" class="text-xs font-bold text-brand-red border-2 border-red-200 rounded-full px-4 py-2 hover:bg-red-50 hover:scale-105 transition-all duration-200">Couldn't Contact</button>
           </form>
         </div>
       </div>
